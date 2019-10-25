@@ -7,11 +7,35 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <arpa/inet.h>
+#include <arpa/ine0t.h>
 int clients[30];
 int index=0;
 static pthread_mutex_t mutex;
 pthread_t thread;
+void *receive(void *args){
+  int ssock= (*(int*)args);
+  char msg[500];
+  while(1){
+    int len=recv(ssock,msg,500,0);
+    if(len<0)
+      return;
+    else{
+      msg[len]='\0';
+      int i=0;
+      pthread_mutex_lock(&mutex);
+      while(i<n){
+        if(clients[i]!=ssock){
+          int status=send(client[i], msg, strlen(msg),0);
+          if(status<0){
+            printf("send failed");
+            continue;
+          }
+        }
+        i++;
+      }
+      pthread_mutex_unlock(&mutex);
+    }       
+}
 int main(int argc, char* argv[]){
   int sock= socket(AF_NET, SOCK_STREAM, 0);
   struct sockaddr_in server;
