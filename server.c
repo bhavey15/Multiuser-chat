@@ -7,9 +7,9 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <arpa/ine0t.h>
+#include <arpa/inet.h>
 int clients[30];
-int index=0;
+int idex=0;
 static pthread_mutex_t mutex;
 pthread_t thread;
 void *receive(void *args){
@@ -18,14 +18,14 @@ void *receive(void *args){
   while(1){
     int len=recv(ssock,msg,500,0);
     if(len<0)
-      return;
+      return 0;
     else{
       msg[len]='\0';
       int i=0;
       pthread_mutex_lock(&mutex);
-      while(i<n){
+      while(i<idex){
         if(clients[i]!=ssock){
-          int status=send(client[i], msg, strlen(msg),0);
+          int status=send(clients[i], msg, strlen(msg),0);
           if(status<0){
             printf("send failed");
             continue;
@@ -34,12 +34,13 @@ void *receive(void *args){
         i++;
       }
       pthread_mutex_unlock(&mutex);
-    }       
+    } 
+  }
 }
 int main(int argc, char* argv[]){
-  int sock= socket(AF_NET, SOCK_STREAM, 0);
+  int sock= socket(AF_INET, SOCK_STREAM, 0);
   struct sockaddr_in server;
-  server.sin_family= AF_NET;
+  server.sin_family= AF_INET;
   server.sin_port= htons(1550);
   server.sin_addr.s_addr= htonl(INADDR_ANY);
   int b= bind(sock, (struct sockaddr*)&server, sizeof(server));
