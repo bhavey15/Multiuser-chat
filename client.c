@@ -22,12 +22,12 @@ void* receive(void* args){
 int main(int argc, char* argv[]){
   int clientsocket= socket(AF_INET, SOCK_STREAM, 0);
   struct sockaddr_in sket;
-  sket.sin_family = AF_NET;
+  sket.sin_family = AF_INET;
   sket.sin_addr.s_addr = htonl(INADDR_ANY);
-  sket.set_port = htons(1550);
+  sket.sin_port = htons(1550);
   char client_name[500];
   strcpy(client_name, argv[1]);
-  if(connect(clientsocket, (sockaddr*) &sket, sizeof(sket))<0){
+  if(connect(clientsocket, (struct sockaddr*) &sket, sizeof(sket))<0){
     printf("Connection did not establish.. exiting");
     return 0;
   }
