@@ -39,13 +39,14 @@ int main(int argc, char* argv[]){
     strcpy(s_msg, client_name);
     strcat(s_msg, ":");
     strcat(s_msg, msg);
-    int s= send(clientsocket, s_msg, 1024,0);
+    int s= write(clientsocket, s_msg, 1024,0);
     if(s<0){
       printf("message not sent \n");
     }
   }
   pthread_join(thread, NULL);
   close(clientsocket);
+  return 0;
 }
 
     
