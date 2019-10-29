@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 int clients[30];
 int idex=0;
-static pthread_mutex_t mutex;
+// static pthread_mutex_t mutex;
 pthread_t thread;
 void *receive(void *args){
   int ssock= (*(int*)args);
@@ -22,7 +22,17 @@ void *receive(void *args){
     else{
       msg[len]='\0';
       int i=0;
-      pthread_mutex_lock(&mutex);
+      int choice;
+      printf("1. send to group\n2. send to client number\n");
+      scanf("%d",&ch);
+      
+      if(ch==2){
+        char name[500];
+        printf("enter client name");
+        gets(name);
+        
+      }
+      else{
       while(i<idex){
         if(clients[i]!=ssock){
           int status=write(clients[i], msg, strlen(msg));
@@ -33,7 +43,7 @@ void *receive(void *args){
         }
         i++;
       }
-      pthread_mutex_unlock(&mutex);
+      }
     } 
   }
 }
@@ -56,12 +66,10 @@ int main(int argc, char* argv[]){
     int c_sock=accept(sock, (struct sockaddr*)NULL, NULL);
     if(c_sock<0)
       printf("failed");
-    pthread_mutex_lock(&mutex);
     clients[idex]=c_sock;
     idex++;
     pthread_create(&thread, NULL, (void *)receive, &c_sock);
-    pthread_mutex_unlock(&mutex);
   }
-  close(sock);
+  return 0;
 }
 
