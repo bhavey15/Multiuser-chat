@@ -17,7 +17,7 @@ void *receive(void *args){
   char msg[500];
   while(1){
     int len=recv(ssock,msg,500,0);
-    if(len<0)
+    if(len<=0)
       return 0;
     else{
       msg[len]='\0';
@@ -25,7 +25,7 @@ void *receive(void *args){
       pthread_mutex_lock(&mutex);
       while(i<idex){
         if(clients[i]!=ssock){
-          int status=send(clients[i], msg, strlen(msg),0);
+          int status=write(clients[i], msg, strlen(msg));
           if(status<0){
             printf("send failed");
             continue;
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]){
     if(c_sock<0)
       printf("failed");
     pthread_mutex_lock(&mutex);
-    clients[index]=c_sock;
-    index++;
+    clients[idex]=c_sock;
+    idex++;
     pthread_create(&thread, NULL, (void *)receive, &c_sock);
     pthread_mutex_unlock(&mutex);
   }
