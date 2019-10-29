@@ -14,8 +14,12 @@ void* receive(void* args){
   int clientsocket= *((int *)args);
   while(1){
     int r_val=recv(clientsocket, data, 1024, 0);
+    if(r_val<=0)
+      break;
+    else{
     data[r_val]='\0';
     printf("%s\n", data);
+    }
   }
 }
 
@@ -32,7 +36,7 @@ int main(int argc, char* argv[]){
     return 0;
   }
   pthread_t thread;
-  pthread_create(&thread, NULL, (void *)receive, &sket);
+  pthread_create(&thread, NULL, (void *)receive, &clientsocket);
   while(1){
     char s_msg[500];
     scanf("%s", msg);
