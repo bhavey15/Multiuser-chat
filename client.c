@@ -18,7 +18,7 @@ void* receive(void* args){
       break;
     else{
     data[r_val]='\0';
-    printf("%s\n", data);
+    puts(data);
     }
   }
 }
@@ -39,11 +39,14 @@ int main(int argc, char* argv[]){
   pthread_create(&thread, NULL, (void *)receive, &clientsocket);
   while(1){
     char s_msg[500];
-    scanf("%s", msg);
+    int status=fgets(msg, 500, stdin);
+    if(status<=0)
+	break;
+    //scanf("%s", msg);
     strcpy(s_msg, client_name);
     strcat(s_msg, ":");
     strcat(s_msg, msg);
-    int s= write(clientsocket, s_msg, 1024,0);
+    int s= write(clientsocket, s_msg, strlen(s_msg));
     if(s<0){
       printf("message not sent \n");
     }
@@ -52,7 +55,3 @@ int main(int argc, char* argv[]){
   close(clientsocket);
   return 0;
 }
-
-    
-  
-    
