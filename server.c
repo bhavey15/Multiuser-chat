@@ -27,7 +27,7 @@ void *receive(void *args){
       scanf("%d",&choice);
       if(ch==2){
         int sno;
-        printf("enter socket number");
+        printf("enter socket number\n");
         scanf("%d",&sno);
         while(1){
           if(clients[i]==sno){
