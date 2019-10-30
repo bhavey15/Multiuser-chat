@@ -31,7 +31,7 @@ void *receive(void *args){
         printf("enter socket number\n");
         scanf("%d",&sno);
         while(1){
-          if(clients[i]==sno){
+          if(clients[i]==sno && sno!=ssock){
             int status=write(clients[i],msg, strlen(msg));
             if(status<0){
               printf("sending failed\n");
@@ -82,6 +82,7 @@ int main(int argc, char* argv[]){
     clients[idex]=c_sock;
     idex++;
     pthread_create(&thread, NULL, (void *)receive, &c_sock);
+    pthread_join(
   }
   return 0;
 }
