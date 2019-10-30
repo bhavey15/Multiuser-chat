@@ -26,7 +26,7 @@ void *receive(void *args){
       int choice;
       printf("1. send to all\n2. send to particular client\n");
       scanf("%d",&choice);
-      if(ch==2){
+      if(choice==2){
         int sno;
         printf("enter socket number\n");
         scanf("%d",&sno);
@@ -82,7 +82,6 @@ int main(int argc, char* argv[]){
     clients[idex]=c_sock;
     idex++;
     pthread_create(&thread, NULL, (void *)receive, &c_sock);
-    pthread_join(
   }
   return 0;
 }
