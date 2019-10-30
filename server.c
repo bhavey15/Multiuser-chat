@@ -15,6 +15,7 @@ pthread_t thread;
 void *receive(void *args){
   int ssock= (*(int*)args);
   char msg[500];
+  printf("Reaching here%d\n", ssock);
   while(1){
     int len=recv(ssock,msg, 1024,0);
     if(len<=0)
