@@ -16,28 +16,37 @@ void *receive(void *args){
   int ssock= (*(int*)args);
   char msg[500];
   while(1){
-    int len=recv(ssock,msg,500,0);
+    int len=recv(ssock,msg, 1024,0);
     if(len<=0)
       return 0;
     else{
       msg[len]='\0';
       int i=0;
       int choice;
-      printf("1. send to group\n2. send to client number\n");
-      scanf("%d",&ch);
-      
+      printf("1. send to all\n2. send to particular client\n");
+      scanf("%d",&choice);
       if(ch==2){
-        char name[500];
-        printf("enter client name");
-        gets(name);
-        
+        int sno;
+        printf("enter socket number");
+        scanf("%d",&sno);
+        while(1){
+          if(clients[i]==sno){
+            int status=write(clients[i],msg, strlen(msg));
+            if(status<0){
+              printf("sending failed\n");
+              continue;
+            }
+            break;
+          }
+          i++;
+        }
       }
       else{
       while(i<idex){
         if(clients[i]!=ssock){
           int status=write(clients[i], msg, strlen(msg));
           if(status<0){
-            printf("send failed");
+            printf("send failed\n");
             continue;
           }
         }
@@ -54,22 +63,24 @@ int main(int argc, char* argv[]){
   server.sin_port= htons(1550);
   server.sin_addr.s_addr= htonl(INADDR_ANY);
   int b= bind(sock, (struct sockaddr*)&server, sizeof(server));
+  printf("bind value %d \n", b);
   if(b<0)
-    printf("server setup failed");
+    printf("server setup failed \n");
   else
-    printf("server setup successfull");
+    printf("server setup successful \n");
   if(listen(sock, 1024)<0){
-    printf("listening failed");
+    printf("listening failed \n");
     return 0;
   }
   while(1){
     int c_sock=accept(sock, (struct sockaddr*)NULL, NULL);
     if(c_sock<0)
-      printf("failed");
+      printf("failed\n");
+    else
+      printf("Socket number -> %d \n",c_sock);
     clients[idex]=c_sock;
     idex++;
     pthread_create(&thread, NULL, (void *)receive, &c_sock);
   }
   return 0;
 }
-
