@@ -21,6 +21,7 @@ Compile against the Makefile using command "make".
 
 Input: 
 While running the client.c, pass the name of the client as the command line argument.
+While sending the message, write n at the end of the message to send to all and write give the client number at the end to send to to that particular client.
 
 Output: 
 Server screen displays whether the setup was successful or not. Whenever a new client is connected to the server, it displays the socket file descriptor on the screen respective to that client.
