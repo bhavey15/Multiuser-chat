@@ -35,16 +35,17 @@ void *receive(void *args){
           int sno=msg[0] - '0';
           if(sno-1>idex)
             printf("sending failed... client not avaliable\n");
-          else if(sno!=-1){
+          else{
             int status = write(clients[sno-1], s_msg, strlen(s_msg));
             if(status<0){
               printf("sending failed\n");
             }
           }
-          else{
-            while(i<idex){
+      }
+      else if(msg[0]=='n'){
+        while(i<idex){
               if(clients[i]!=ssock){
-                int status=write(clients[i], msg, strlen(msg));
+                int status=write(clients[i], s_msg, strlen(s_msg));
                 if(status<0){
                   printf("send failed\n");
                   continue;
@@ -52,8 +53,7 @@ void *receive(void *args){
               }
               i++;
             }
-          }
-        }
+      }
       else
         printf("cannot send\n");
       } 
