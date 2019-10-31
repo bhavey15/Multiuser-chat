@@ -15,7 +15,6 @@ pthread_t thread;
 void *receive(void *args){
   int ssock= (*(int*)args);
   char msg[500];
-  printf("Reaching here%d\n", ssock);
   while(1){
     int len=recv(ssock,msg, 1024,0);
     if(len<=0)
@@ -23,39 +22,42 @@ void *receive(void *args){
     else{
       msg[len]='\0';
       int i=0;
-      int choice;
-      printf("1. send to all\n2. send to particular client\n");
-      scanf("%d",&choice);
-      if(choice==2){
-        int sno;
-        printf("enter socket number\n");
-        scanf("%d",&sno);
-        while(1){
-          if(clients[i]==sno && sno!=ssock){
-            int status=write(clients[i],msg, strlen(msg));
-            if(status<0){
-              printf("sending failed\n");
-              continue;
-            }
-            break;
-          }
-          i++;
-        }
-      }
-      else{
-      while(i<idex){
-        if(clients[i]!=ssock){
-          int status=write(clients[i], msg, strlen(msg));
-          if(status<0){
-            printf("send failed\n");
-            continue;
-          }
+      char s_msg[500];
+      while(msg[i]!='\0'){
+        if(i>0){
+          s_msg[i-1]=msg[i];
         }
         i++;
       }
-      }
-    } 
-  }
+      s_msg[i-1]='\0';
+      i=0;
+      if(isdigit(msg[0])){
+          int sno=stoi(msg[0]);
+          if(sno-1>idex)
+            printf("sending failed... client not avaliable\n");
+          else if(sno!=-1){
+            int status = write(clients[sno-1], s_msg, strlen(s_msg));
+            if(status<0){
+              printf("sending failed\n");
+            }
+          }
+          else{
+            while(i<idex){
+              if(clients[i]!=ssock){
+                int status=write(clients[i], msg, strlen(msg));
+                if(status<0){
+                  printf("send failed\n");
+                  continue;
+                }
+              }
+              i++;
+            }
+          }
+        }
+      else
+        printf("cannot send\n");
+      } 
+    }
 }
 int main(int argc, char* argv[]){
   int sock= socket(AF_INET, SOCK_STREAM, 0);
