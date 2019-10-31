@@ -32,7 +32,7 @@ void *receive(void *args){
       s_msg[i-1]='\0';
       i=0;
       if(isdigit(msg[0])){
-          int sno=stoi(msg[0]);
+          int sno=msg[0] - '0';
           if(sno-1>idex)
             printf("sending failed... client not avaliable\n");
           else if(sno!=-1){
