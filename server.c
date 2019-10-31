@@ -69,6 +69,7 @@ int main(int argc, char* argv[]){
   printf("bind value %d \n", b);
   if(b<0)
     printf("server setup failed \n");
+    exit(0);
   else
     printf("server setup successful \n");
   if(listen(sock, 1024)<0){
